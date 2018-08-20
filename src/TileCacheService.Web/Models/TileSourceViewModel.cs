@@ -14,6 +14,7 @@ namespace TileCacheService.Web.Models
 	public class TileSourceViewModel
 	{
 		public bool AllowHiDefStitching { get; set; }
+
 		public string Bbox { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]
