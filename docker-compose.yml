@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  tilecacheservice.web:
+    image: ${DOCKER_REGISTRY}tilecacheservice
+    build:
+      context: .
+      dockerfile: src/TileCacheService.Web/Dockerfile

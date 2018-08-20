@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <DockerTargetOS>Linux</DockerTargetOS>
+    <UserSecretsId>cf0338da-e5b7-4cc5-b32e-7d28165c6a6c</UserSecretsId>
+    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.0.1916590" />
+		<PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+		<PackageReference Include="Serilog.Exceptions" Version="4.1.0" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1" />
+		<PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TileCacheService.Data\TileCacheService.Data.csproj" />
+    <ProjectReference Include="..\TileCacheService.Processing\TileCacheService.Processing.csproj" />
+    <ProjectReference Include="..\TileCacheService.Shared\TileCacheService.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Data\dummy.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TileCaches\dummy.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
