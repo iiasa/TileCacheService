@@ -111,9 +111,10 @@ namespace TileCacheService.Web.Core
 
 							TilesTotal = tiles.TilesTotal;
 
-							if (TilesTotal > 5000)
+							if (TilesTotal > 10000)
 							{
-								throw new ArgumentException($"Tile cache exceeding the maximum number of 5000 tiles: {TilesTotal}.");
+								await TileCacheRepository.SetTileCacheError(unfinishedTileCache.TileCacheId);
+								throw new ArgumentException($"Tile cache exceeding the maximum number of 10000 tiles: {TilesTotal}.");
 							}
 
 							TileDownloader tileDownloader;
@@ -156,7 +157,7 @@ namespace TileCacheService.Web.Core
 							double centerLon = tileCacheBounds.Left + (Math.Abs(tileCacheBounds.Right - tileCacheBounds.Left) / 2);
 							double centerLat = tileCacheBounds.Bottom + (Math.Abs(tileCacheBounds.Top - tileCacheBounds.Bottom) / 2);
 							string metadataCenter = $"{centerLon},{centerLat},{unfinishedTileCache.ZoomLevelMin}";
-							string format = tileSource.TileServerUrls[0].Url.EndsWith("jpg") ? "jpg" : "png";
+							string format = tileSource.TileServerUrls[0].Url.EndsWith("png") ? "png" : "jpg";
 
 							tileCacheManager.SaveMetadata(unfinishedTileCache.Name, format, metadataBounds, metadataCenter,
 								unfinishedTileCache.ZoomLevelMin ?? 0, unfinishedTileCache.ZoomLevelMax);

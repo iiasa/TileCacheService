@@ -13,6 +13,8 @@ namespace TileCacheService.Data.Repositories
 
 	public class TileCacheRepository
 	{
+		private readonly int maxRetryCount = 10;
+
 		public TileCacheRepository(TileCacheServiceContext context)
 		{
 			Context = context;
@@ -30,9 +32,22 @@ namespace TileCacheService.Data.Repositories
 
 		public async Task<TileCache> GetFirstUnfinishedTileCache()
 		{
-			return await Context.TileCaches.FirstOrDefaultAsync(x =>
+			TileCache firstUnfinishedTileCache = await Context.TileCaches.FirstOrDefaultAsync(x =>
 				!x.ProcessingStarted.HasValue ||
-				(!x.ProcessingFinished.HasValue && (x.ProcessingStarted.Value - DateTime.Now) < TimeSpan.FromHours(1)));
+				(!x.ProcessingFinished.HasValue && (x.ProcessingStarted.Value - DateTime.Now) > TimeSpan.FromHours(1)));
+
+			if (firstUnfinishedTileCache != null)
+			{
+				if (firstUnfinishedTileCache.RetryCount++ > this.maxRetryCount)
+				{
+					firstUnfinishedTileCache.ProcessingFinished = DateTime.Now;
+					firstUnfinishedTileCache.ProcessingError = true;
+				}
+
+				await Context.SaveChangesAsync();
+			}
+
+			return firstUnfinishedTileCache;
 		}
 
 		public async Task<List<TileCache>> GetTileCaches()
@@ -43,6 +58,15 @@ namespace TileCacheService.Data.Repositories
 		public async Task<TileCache> GetTileCacheWithId(Guid id)
 		{
 			return await Context.TileCaches.SingleOrDefaultAsync(x => x.TileCacheId == id);
+		}
+
+		public async Task SetTileCacheError(Guid id)
+		{
+			TileCache tileCache = await Context.TileCaches.SingleAsync(x => x.TileCacheId == id);
+			tileCache.ProcessingFinished = DateTime.Now;
+			tileCache.ProcessingError = true;
+
+			await Context.SaveChangesAsync();
 		}
 
 		public async Task SetTileCacheFinished(Guid id, string fileName)

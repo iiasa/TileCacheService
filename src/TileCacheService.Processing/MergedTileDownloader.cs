@@ -81,13 +81,13 @@ namespace TileCacheService.Processing
 
 											using (MemoryStream memoryStream = new MemoryStream())
 											{
-												if (url.EndsWith("jpg"))
+												if (url.EndsWith("png"))
 												{
-													image.SaveAsJpeg(memoryStream);
+													image.SaveAsPng(memoryStream);
 												}
 												else
 												{
-													image.SaveAsPng(memoryStream);
+													image.SaveAsJpeg(memoryStream);
 												}
 
 												return memoryStream.ToArray();

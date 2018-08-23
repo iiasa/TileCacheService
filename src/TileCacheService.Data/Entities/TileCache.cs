@@ -15,9 +15,13 @@ namespace TileCacheService.Data.Entities
 
 		public string Name { get; set; }
 
+		public bool ProcessingError { get; set; }
+
 		public DateTime? ProcessingFinished { get; set; }
 
 		public DateTime? ProcessingStarted { get; set; }
+
+		public int RetryCount { get; set; }
 
 		public Guid TileCacheId { get; set; }
 

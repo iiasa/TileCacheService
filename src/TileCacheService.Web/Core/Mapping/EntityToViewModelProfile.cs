@@ -24,8 +24,9 @@ namespace TileCacheService.Web.Core.Mapping
 				.ForMember(dest => dest.Status,
 					opt => opt.MapFrom(src =>
 						src.ProcessingStarted.HasValue
-							? (src.ProcessingFinished.HasValue ? TileCacheStatusEnum.Finished : TileCacheStatusEnum.Processing)
-							: TileCacheStatusEnum.New));
+							? (src.ProcessingFinished.HasValue
+								? (src.ProcessingError ? TileCacheStatusEnum.Error : TileCacheStatusEnum.Finished)
+								: TileCacheStatusEnum.Processing) : TileCacheStatusEnum.New));
 			CreateMap<TileCache, CreateTileCacheViewModel>();
 		}
 	}

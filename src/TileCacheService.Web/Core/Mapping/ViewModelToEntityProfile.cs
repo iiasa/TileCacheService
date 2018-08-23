@@ -27,12 +27,16 @@ namespace TileCacheService.Web.Core.Mapping
 			CreateMap<TileCacheViewModel, TileCache>()
 				.ForMember(dest => dest.TileSource, opt => opt.Ignore())
 				.ForMember(dest => dest.Filename, opt => opt.Ignore())
+				.ForMember(dest => dest.RetryCount, opt => opt.Ignore())
+				.ForMember(dest => dest.ProcessingError, opt => opt.Ignore())
 				.ForMember(dest => dest.ProcessingStarted, opt => opt.Ignore())
 				.ForMember(dest => dest.ProcessingFinished, opt => opt.Ignore());
 			CreateMap<CreateTileCacheViewModel, TileCache>()
 				.ForMember(dest => dest.TileCacheId, opt => opt.Ignore())
 				.ForMember(dest => dest.TileSource, opt => opt.Ignore())
 				.ForMember(dest => dest.Filename, opt => opt.Ignore())
+				.ForMember(dest => dest.RetryCount, opt => opt.Ignore())
+				.ForMember(dest => dest.ProcessingError, opt => opt.Ignore())
 				.ForMember(dest => dest.ProcessingStarted, opt => opt.Ignore())
 				.ForMember(dest => dest.ProcessingFinished, opt => opt.Ignore());
 		}

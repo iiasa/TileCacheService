@@ -55,11 +55,16 @@ namespace TileCacheService.Processing
 						foreach (Tile tile in tiles.GetConsumingEnumerable())
 						{
 							using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, tile.Url))
-							using (Stream contentStream = await (await client.SendAsync(request)).Content.ReadAsStreamAsync())
-							using (MemoryStream memoryStream = new MemoryStream())
 							{
-								await contentStream.CopyToAsync(memoryStream);
-								tileReceivedCallback(tile.ZoomLevel, tile.TileRow, tile.TileColumn, memoryStream.ToArray());
+								request.Headers.Add("user-agent",
+									"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
+
+								using (Stream contentStream = await (await client.SendAsync(request)).Content.ReadAsStreamAsync())
+								using (MemoryStream memoryStream = new MemoryStream())
+								{
+									await contentStream.CopyToAsync(memoryStream);
+									tileReceivedCallback(tile.ZoomLevel, tile.TileRow, tile.TileColumn, memoryStream.ToArray());
+								}
 							}
 						}
 					}

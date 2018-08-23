@@ -5,11 +5,8 @@
 
 namespace TileCacheService.Web
 {
-	using System;
-	using System.IO;
 	using Microsoft.AspNetCore;
 	using Microsoft.AspNetCore.Hosting;
-	using Microsoft.Extensions.Configuration;
 	using Serilog;
 
 	public class Program
@@ -18,15 +15,7 @@ namespace TileCacheService.Web
 
 		public static void Main(string[] args)
 		{
-			string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-
-			IConfigurationRoot configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-				.AddJsonFile("appsettings.json", false, true)
-				.AddJsonFile($"appsettings.{environment}.json", true)
-				.Build();
-
 			CreateWebHostBuilder(args)
-				.UseConfiguration(configuration)
 				.ConfigureLogging((hostingContext, logging) =>
 				{
 					logging.AddSerilog(new LoggerConfiguration().ReadFrom
