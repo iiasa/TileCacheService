@@ -71,6 +71,8 @@ namespace TileCacheService.Processing
 							{
 								using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url))
 								{
+									request.Headers.Add("user-agent",
+										"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
 									HttpResponseMessage httpResponseMessage = await httpClient2.SendAsync(request);
 
 									if (!httpResponseMessage.IsSuccessStatusCode)
