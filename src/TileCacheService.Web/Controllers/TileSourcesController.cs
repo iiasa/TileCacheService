@@ -39,8 +39,9 @@ namespace TileCacheService.Web.Controllers
 			return Ok(tileSources.Select(x => Mapper.Map<TileSourceViewModel>(x)));
 		}
 
-		[HttpGet("{tileSourceId}")]
+		[HttpGet("{tileSourceId:Guid}")]
 		[ProducesResponseType(typeof(TileSourceViewModel), (int)HttpStatusCode.OK)]
+		[ProducesResponseType((int)HttpStatusCode.NotFound)]
 		public async Task<IActionResult> Get(Guid tileSourceId)
 		{
 			TileSource tileSource = await TileSourceRepository.GetTileSourceWithId(tileSourceId);
@@ -54,7 +55,7 @@ namespace TileCacheService.Web.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(typeof(void), (int)HttpStatusCode.Created)]
+		[ProducesResponseType(typeof(TileSourceViewModel), (int)HttpStatusCode.Created)]
 		public async Task<IActionResult> Post([FromBody] CreateTileSourceViewModel viewModel)
 		{
 			TileSource tileSource = await TileSourceRepository.CreateTileSource(Mapper.Map<TileSource>(viewModel));
@@ -62,7 +63,7 @@ namespace TileCacheService.Web.Controllers
 			return CreatedAtAction(nameof(Get), new
 			{
 				tileSourceId = tileSource.TileSourceId,
-			}, null);
+			}, Mapper.Map<TileSourceViewModel>(tileSource));
 		}
 	}
 }

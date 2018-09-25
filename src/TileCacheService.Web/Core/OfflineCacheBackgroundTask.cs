@@ -6,7 +6,6 @@
 namespace TileCacheService.Web.Core
 {
 	using System;
-	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using System.Threading;
@@ -23,7 +22,6 @@ namespace TileCacheService.Web.Core
 	using TileCacheService.Shared;
 	using TileCacheService.Shared.Helpers;
 	using TileCacheService.Shared.Services;
-	using TileCacheService.Shared.ViewModels;
 	using TileCacheService.Web.Models;
 
 	public class OfflineCacheBackgroundTask : BackgroundService
@@ -82,20 +80,13 @@ namespace TileCacheService.Web.Core
 
 						try
 						{
-							List<PointViewModel> points = CoordinateHelper.WktStringToPolygonViewModel(unfinishedTileCache.Bbox);
-							Bounds bounds = new Bounds
-							{
-								Left = points.Min(x => x.Longitude),
-								Right = points.Max(x => x.Longitude),
-								Bottom = points.Min(x => x.Latitude),
-								Top = points.Max(x => x.Latitude),
-							};
+							Bounds bounds = GeometryHelper.ToBounds(unfinishedTileCache.Bbox);
 
 							TileSource tileSource = await TileSourceRepository.GetTileSourceWithId(unfinishedTileCache.TileSourceId);
 
 							TileRangeCalculator calculator = new TileRangeCalculator
 							{
-								ValidBounds = CoordinateHelper.WktToBounds(tileSource.Bbox),
+								ValidBounds = GeometryHelper.ToBounds(tileSource.Bbox),
 								ValidZoomRange = new ZoomRange
 								{
 									MinZoom = 0,
@@ -150,12 +141,11 @@ namespace TileCacheService.Web.Core
 								}
 							});
 
-							Bounds tileCacheBounds = CoordinateHelper.WktToBounds(unfinishedTileCache.Bbox);
-							string metadataBounds =
-								$"{tileCacheBounds.Left},{tileCacheBounds.Bottom},{tileCacheBounds.Right},{tileCacheBounds.Top}";
+							Bounds tileCacheBounds = GeometryHelper.ToBounds(unfinishedTileCache.Bbox);
+							string metadataBounds = tileCacheBounds.ToCsv();
 
-							double centerLon = tileCacheBounds.Left + (Math.Abs(tileCacheBounds.Right - tileCacheBounds.Left) / 2);
-							double centerLat = tileCacheBounds.Bottom + (Math.Abs(tileCacheBounds.Top - tileCacheBounds.Bottom) / 2);
+							double centerLon = tileCacheBounds.Center().Lon;
+							double centerLat = tileCacheBounds.Center().Lat;
 							string metadataCenter = $"{centerLon},{centerLat},{unfinishedTileCache.ZoomLevelMin}";
 							string format = tileSource.TileServerUrls[0].Url.EndsWith("png") ? "png" : "jpg";
 

@@ -7,6 +7,7 @@ namespace TileCacheService.Web.Core.Mapping
 {
 	using AutoMapper;
 	using TileCacheService.Data.Entities;
+	using TileCacheService.Shared.Helpers;
 	using TileCacheService.Web.Models;
 
 	public class ViewModelToEntityProfile : Profile
@@ -32,6 +33,7 @@ namespace TileCacheService.Web.Core.Mapping
 				.ForMember(dest => dest.ProcessingStarted, opt => opt.Ignore())
 				.ForMember(dest => dest.ProcessingFinished, opt => opt.Ignore());
 			CreateMap<CreateTileCacheViewModel, TileCache>()
+				.ForMember(dest => dest.Bbox, opt => opt.MapFrom(src => GeometryHelper.HarmonizeBbox(src.Bbox)))
 				.ForMember(dest => dest.TileCacheId, opt => opt.Ignore())
 				.ForMember(dest => dest.TileSource, opt => opt.Ignore())
 				.ForMember(dest => dest.Filename, opt => opt.Ignore())

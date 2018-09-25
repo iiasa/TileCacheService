@@ -32,8 +32,9 @@ namespace TileCacheService.Web.Controllers
 
 		public TileCacheRepository TileCacheRepository { get; set; }
 
-		[HttpGet("{tileCacheId}/Download")]
+		[HttpGet("{tileCacheId:Guid}/Download")]
 		[Produces(@"application/octet-stream")]
+		[ProducesResponseType((int)HttpStatusCode.NotFound)]
 		public async Task<IActionResult> Download(Guid tileCacheId)
 		{
 			TileCache tileCache = await TileCacheRepository.GetTileCacheWithId(tileCacheId);
@@ -49,7 +50,7 @@ namespace TileCacheService.Web.Controllers
 			Response.Headers[HeaderNames.ContentDisposition] = contentDisposition.ToString();
 
 			FileStream stream = new FileStream(Path.Combine("TileCaches", tileCache.Filename), FileMode.Open);
-			return new FileStreamResult(stream, "application/octet-stream");
+			return new FileStreamResult(stream, @"application/octet-stream");
 		}
 
 		[HttpGet]
@@ -61,8 +62,9 @@ namespace TileCacheService.Web.Controllers
 			return Ok(tileSources.Select(x => Mapper.Map<TileCacheViewModel>(x)));
 		}
 
-		[HttpGet("{tileCacheId}")]
+		[HttpGet("{tileCacheId:Guid}")]
 		[ProducesResponseType(typeof(TileCacheViewModel), (int)HttpStatusCode.OK)]
+		[ProducesResponseType((int)HttpStatusCode.NotFound)]
 		public async Task<IActionResult> Get(Guid tileCacheId)
 		{
 			TileCache tileCache = await TileCacheRepository.GetTileCacheWithId(tileCacheId);
@@ -76,7 +78,7 @@ namespace TileCacheService.Web.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(typeof(void), (int)HttpStatusCode.Created)]
+		[ProducesResponseType(typeof(TileCacheViewModel), (int)HttpStatusCode.Created)]
 		public async Task<IActionResult> Post([FromBody] CreateTileCacheViewModel viewModel)
 		{
 			TileCache tileCache = await TileCacheRepository.CreateTileCache(Mapper.Map<TileCache>(viewModel));
@@ -84,7 +86,7 @@ namespace TileCacheService.Web.Controllers
 			return CreatedAtAction(nameof(Get), new
 			{
 				tileCacheId = tileCache.TileCacheId,
-			}, null);
+			}, Mapper.Map<TileCacheViewModel>(tileCache));
 		}
 	}
 }
