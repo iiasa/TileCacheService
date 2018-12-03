@@ -25,7 +25,7 @@ namespace TileCacheService.Data.Entities
 
 		public Guid TileCacheId { get; set; }
 
-		public TileSource TileSource { get; set; }
+		public virtual TileSource TileSource { get; set; }
 
 		public Guid TileSourceId { get; set; }
 

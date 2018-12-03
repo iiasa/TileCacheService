@@ -20,22 +20,21 @@ namespace TileCacheService.Web
 
 	public class Startup
 	{
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, IHostingEnvironment env)
 		{
 			Configuration = configuration;
+			Environment = env;
 		}
 
 		public IConfiguration Configuration { get; }
+
+		public IHostingEnvironment Environment { get; }
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, IMapper mapper)
 		{
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-			}
-			else
-			{
-				app.UseHsts();
 			}
 
 			mapper.ConfigurationProvider.AssertConfigurationIsValid();
@@ -47,14 +46,21 @@ namespace TileCacheService.Web
 				c.RoutePrefix = "docs";
 			});
 
-			app.UseHttpsRedirection();
 			app.UseMvc();
 		}
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddDbContext<TileCacheServiceContext>(options =>
-				options.UseSqlite("Data Source=" + Path.Combine("Data", "tile-cache-service.db")));
+			string rootDir = Configuration.GetValue<string>("RootDir");
+			if (string.IsNullOrEmpty(rootDir))
+			{
+				rootDir = Environment.WebRootPath;
+			}
+
+			services.Configure<ServiceOptions>(options => { options.DirectoryRoot = rootDir; });
+
+			string dbPath = Path.Combine(rootDir, "tile-cache-service.db");
+			services.AddDbContext<TileCacheServiceContext>(options => options.UseSqlite($"Data Source={dbPath}").UseLazyLoadingProxies());
 
 			services.AddTransient<TileCacheRepository>();
 			services.AddTransient<TileSourceRepository>();

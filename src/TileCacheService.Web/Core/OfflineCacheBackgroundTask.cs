@@ -15,6 +15,7 @@ namespace TileCacheService.Web.Core
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Hosting;
 	using Microsoft.Extensions.Logging;
+	using Microsoft.Extensions.Options;
 	using TileCacheService.Data.Entities;
 	using TileCacheService.Data.Repositories;
 	using TileCacheService.Processing;
@@ -29,16 +30,19 @@ namespace TileCacheService.Web.Core
 		private static object lockObject = new object();
 
 		public OfflineCacheBackgroundTask(ILogger<OfflineCacheBackgroundTask> logger, IServiceScopeFactory scopeFactory,
-			Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+			Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IOptions<ServiceOptions> serviceOptions)
 		{
 			Logger = logger;
 			ScopeFactory = scopeFactory;
 			HostingEnvironment = hostingEnvironment;
+			ServiceOptions = serviceOptions.Value;
 		}
 
 		public static int TilesCount { get; set; }
 
 		public static int TilesTotal { get; set; }
+
+		public ServiceOptions ServiceOptions { get; }
 
 		public Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment { get; set; }
 
@@ -171,7 +175,7 @@ namespace TileCacheService.Web.Core
 
 		private async Task<TileCacheManager> CreateTileCacheManager(Guid tileCacheId)
 		{
-			string path = Path.Combine("TileCaches", $"{tileCacheId}.mbtiles");
+			string path = Path.Combine(ServiceOptions.DirectoryRoot, "TileCaches", $"{tileCacheId}.mbtiles");
 
 			DbContextOptionsBuilder<TilesContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<TilesContext>();
 			dbContextOptionsBuilder.UseSqlite($"Filename={path}");

@@ -13,24 +13,29 @@ namespace TileCacheService.Web.Controllers
 	using System.Threading.Tasks;
 	using AutoMapper;
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.Extensions.Options;
 	using Microsoft.Net.Http.Headers;
 	using TileCacheService.Data.Entities;
 	using TileCacheService.Data.Repositories;
+	using TileCacheService.Web.Core;
 	using TileCacheService.Web.Models;
 
 	[Route("v1/[controller]")]
 	[ApiController]
 	public class TileCachesController : ControllerBase
 	{
-		public TileCachesController(IMapper mapper, TileCacheRepository tileCacheRepository)
+		public TileCachesController(IMapper mapper, TileCacheRepository tileCacheRepository, IOptions<ServiceOptions> serviceOptions)
 		{
 			Mapper = mapper;
 			TileCacheRepository = tileCacheRepository;
+			ServiceOptions = serviceOptions.Value;
 		}
 
-		public IMapper Mapper { get; set; }
+		public IMapper Mapper { get; }
 
-		public TileCacheRepository TileCacheRepository { get; set; }
+		public ServiceOptions ServiceOptions { get; }
+
+		public TileCacheRepository TileCacheRepository { get; }
 
 		[HttpGet("{tileCacheId:Guid}/Download")]
 		[Produces(@"application/octet-stream")]
@@ -39,7 +44,13 @@ namespace TileCacheService.Web.Controllers
 		{
 			TileCache tileCache = await TileCacheRepository.GetTileCacheWithId(tileCacheId);
 
-			if (tileCache == null || !System.IO.File.Exists(Path.Combine("TileCaches", tileCache.Filename)))
+			if (tileCache == null)
+			{
+				return NotFound();
+			}
+
+			string path = Path.Combine(ServiceOptions.DirectoryRoot, "TileCaches", tileCache.Filename);
+			if (!System.IO.File.Exists(path))
 			{
 				return NotFound();
 			}
@@ -49,7 +60,7 @@ namespace TileCacheService.Web.Controllers
 			contentDisposition.SetHttpFileName(tileCache.Filename);
 			Response.Headers[HeaderNames.ContentDisposition] = contentDisposition.ToString();
 
-			FileStream stream = new FileStream(Path.Combine("TileCaches", tileCache.Filename), FileMode.Open);
+			FileStream stream = new FileStream(path, FileMode.Open);
 			return new FileStreamResult(stream, @"application/octet-stream");
 		}
 

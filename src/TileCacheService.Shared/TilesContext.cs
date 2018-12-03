@@ -7,7 +7,6 @@ namespace TileCacheService.Shared
 {
 	using Microsoft.EntityFrameworkCore;
 	using SpatialFocus.EntityFrameworkCore.Extensions;
-	using SpatialFocus.EntityFrameworkCore.Extensions.NamingConfiguration;
 	using TileCacheService.Shared.Entities;
 
 	public class TilesContext : DbContext
@@ -33,7 +32,8 @@ namespace TileCacheService.Shared
 					x.TileRow,
 				});
 
-			modelBuilder.ConfigureNames(NamingOptions.Default.SetNamingScheme(NamingScheme.SnakeCase).SetTableNamingSource(From.DbSet));
+			modelBuilder.ConfigureNames(NamingOptions.Default.SetNamingScheme(NamingScheme.SnakeCase)
+				.SetTableNamingSource(NamingSource.DbSet));
 		}
 	}
 }

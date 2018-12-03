@@ -14,6 +14,8 @@ namespace TileCacheService.Web.Models
 	{
 		public string Bbox { get; set; }
 
+		public long FileSize { get; set; }
+
 		public string Name { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]

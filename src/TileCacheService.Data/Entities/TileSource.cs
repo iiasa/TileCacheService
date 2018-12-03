@@ -19,7 +19,7 @@ namespace TileCacheService.Data.Entities
 
 		public string Name { get; set; }
 
-		public List<TileServerUrl> TileServerUrls { get; set; }
+		public virtual List<TileServerUrl> TileServerUrls { get; set; }
 
 		public Guid TileSourceId { get; set; }
 

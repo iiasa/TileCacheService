@@ -8,7 +8,6 @@ namespace TileCacheService.Data
 	using System;
 	using Microsoft.EntityFrameworkCore;
 	using SpatialFocus.EntityFrameworkCore.Extensions;
-	using SpatialFocus.EntityFrameworkCore.Extensions.NamingConfiguration;
 	using TileCacheService.Data.Entities;
 	using TileCacheService.Shared.Enums;
 
@@ -33,9 +32,10 @@ namespace TileCacheService.Data
 		{
 			base.OnModelCreating(modelBuilder);
 
-			modelBuilder.ConfigureEnums(EnumOptions.Default);
+			modelBuilder.ConfigureEnumLookup(EnumLookupOptions.Default);
 
-			modelBuilder.ConfigureNames(NamingOptions.Default.SkipTableNamingForGenericEntityTypes().SetTableNamingSource(From.DbSet));
+			modelBuilder.ConfigureNames(NamingOptions.Default.SkipTableNamingForGenericEntityTypes()
+				.SetTableNamingSource(NamingSource.DbSet));
 
 			modelBuilder.Entity<TileSource>()
 				.HasData(new TileSource

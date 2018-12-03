@@ -21,6 +21,7 @@ namespace TileCacheService.Web.Core.Mapping
 				.ForMember(dest => dest.TileServerUrls, opt => opt.MapFrom(src => src.TileServerUrls.Select(x => x.Url)));
 
 			CreateMap<TileCache, TileCacheViewModel>()
+				.ForMember(dest => dest.FileSize, opt => opt.MapFrom<FileSizeValueResolver>())
 				.ForMember(dest => dest.Status,
 					opt => opt.MapFrom(src =>
 						src.ProcessingStarted.HasValue
