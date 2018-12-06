@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.0" />
     <PackageReference Include="SpatialFocus.EntityFrameworkCore.Extensions" Version="1.1.1" />
     <PackageReference Include="Wkx" Version="0.4.2" />
   </ItemGroup>

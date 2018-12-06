@@ -22,7 +22,16 @@ namespace TileCacheService.Web.Core.Mapping
 
 		public long Resolve(TileCache source, TileCacheViewModel destination, long destMember, ResolutionContext context)
 		{
-			return new FileInfo(Path.Combine(ServiceOptions.DirectoryRoot, "TileCaches", source.Filename)).Length;
+			if (source?.Filename != null)
+			{
+				string fileName = Path.Combine(ServiceOptions.DirectoryRoot, "TileCaches", source.Filename);
+				if (File.Exists(fileName))
+				{
+					return new FileInfo(fileName).Length;
+				}
+			}
+
+			return -1;
 		}
 	}
 }

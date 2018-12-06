@@ -21,7 +21,7 @@ namespace TileCacheService.Processing
 		{
 			BlockingCollection<Tile> tiles = new BlockingCollection<Tile>(100);
 
-			Task producerTask = Task.Run(() =>
+			Task.Run(() =>
 				{
 					int index = 0;
 
@@ -29,7 +29,7 @@ namespace TileCacheService.Processing
 					{
 						foreach (TileIndex tileIndex in tileRange.TileIndexes)
 						{
-							tiles.Add(new Tile()
+							tiles.Add(new Tile
 							{
 								ZoomLevel = tileRange.ZoomLevel,
 								TileRow = tileIndex.TileRow,
@@ -59,9 +59,19 @@ namespace TileCacheService.Processing
 								request.Headers.Add("user-agent",
 									"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36");
 
-								using (Stream contentStream = await (await client.SendAsync(request)).Content.ReadAsStreamAsync())
+								HttpResponseMessage response = await client.SendAsync(request);
+								if (!response.IsSuccessStatusCode)
+								{
+									throw new HttpRequestException(response.ReasonPhrase);
+								}
+
+								using (Stream contentStream = await response.Content.ReadAsStreamAsync())
 								using (MemoryStream memoryStream = new MemoryStream())
 								{
+									// Reduce jpg size
+									////Image<Rgba32> image = Image.Load(contentStream, new JpegDecoder());
+									////image.SaveAsJpeg(memoryStream, new JpegEncoder { Quality = 30, Subsample = JpegSubsample.Ratio444 });
+
 									await contentStream.CopyToAsync(memoryStream);
 									tileReceivedCallback(tile.ZoomLevel, tile.TileRow, tile.TileColumn, memoryStream.ToArray());
 								}

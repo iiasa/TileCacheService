@@ -38,7 +38,8 @@ namespace TileCacheService.Web.Controllers
 		public TileCacheRepository TileCacheRepository { get; }
 
 		[HttpGet("{tileCacheId:Guid}/Download")]
-		[Produces(@"application/octet-stream")]
+		[Produces(@"application/octet-stream", @"text/plain", @"application/json", @"text/json")]
+		[ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
 		[ProducesResponseType((int)HttpStatusCode.NotFound)]
 		public async Task<IActionResult> Download(Guid tileCacheId)
 		{

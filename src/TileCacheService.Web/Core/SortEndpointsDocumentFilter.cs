@@ -7,16 +7,21 @@ namespace TileCacheService.Web.Core
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using Microsoft.OpenApi.Models;
 	using Swashbuckle.AspNetCore.Swagger;
 	using Swashbuckle.AspNetCore.SwaggerGen;
 
 	public class SortEndpointsDocumentFilter : IDocumentFilter
 	{
-		public void Apply(SwaggerDocument swaggerDoc, DocumentFilterContext context)
+		public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
 		{
-			List<KeyValuePair<string, PathItem>> paths = swaggerDoc.Paths.OrderBy(e => e.Key).ToList();
+			List<KeyValuePair<string, OpenApiPathItem>> paths = swaggerDoc.Paths.OrderBy(e => e.Key).ToList();
 
-			swaggerDoc.Paths = paths.ToDictionary(e => e.Key, e => e.Value);
+			swaggerDoc.Paths = new OpenApiPaths();
+			foreach (KeyValuePair<string, OpenApiPathItem> item in paths.ToDictionary(e => e.Key, e => e.Value))
+			{
+				swaggerDoc.Paths.Add(item.Key, item.Value);
+			}
 		}
 	}
 }

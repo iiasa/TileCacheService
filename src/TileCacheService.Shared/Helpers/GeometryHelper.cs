@@ -7,6 +7,7 @@ namespace TileCacheService.Shared.Helpers
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Globalization;
 	using System.Linq;
 	using TileCacheService.Processing.Models;
 	using TileCacheService.Shared.ViewModels;
@@ -23,10 +24,10 @@ namespace TileCacheService.Shared.Helpers
 				// Format seems to be lon,lat,lon,lat (lower left, upper right)
 				Bounds bounds = new Bounds
 				{
-					Left = double.Parse(inputSplit[0]),
-					Bottom = double.Parse(inputSplit[1]),
-					Right = double.Parse(inputSplit[2]),
-					Top = double.Parse(inputSplit[3]),
+					Left = double.Parse(inputSplit[0], CultureInfo.InvariantCulture),
+					Bottom = double.Parse(inputSplit[1], CultureInfo.InvariantCulture),
+					Right = double.Parse(inputSplit[2], CultureInfo.InvariantCulture),
+					Top = double.Parse(inputSplit[3], CultureInfo.InvariantCulture),
 				};
 
 				return ToWktPolygon(bounds);

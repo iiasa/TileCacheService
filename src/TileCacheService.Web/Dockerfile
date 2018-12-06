@@ -1,9 +1,9 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
 EXPOSE 6349
 EXPOSE 44352
 
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY ["src/TileCacheService.Web/TileCacheService.Web.csproj", "src/TileCacheService.Web/"]
 COPY ["src/TileCacheService.Processing/TileCacheService.Processing.csproj", "src/TileCacheService.Processing/"]

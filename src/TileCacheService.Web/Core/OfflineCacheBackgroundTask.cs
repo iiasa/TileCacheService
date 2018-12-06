@@ -30,7 +30,7 @@ namespace TileCacheService.Web.Core
 		private static object lockObject = new object();
 
 		public OfflineCacheBackgroundTask(ILogger<OfflineCacheBackgroundTask> logger, IServiceScopeFactory scopeFactory,
-			Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment, IOptions<ServiceOptions> serviceOptions)
+			IHostingEnvironment hostingEnvironment, IOptions<ServiceOptions> serviceOptions)
 		{
 			Logger = logger;
 			ScopeFactory = scopeFactory;
@@ -44,7 +44,7 @@ namespace TileCacheService.Web.Core
 
 		public ServiceOptions ServiceOptions { get; }
 
-		public Microsoft.AspNetCore.Hosting.IHostingEnvironment HostingEnvironment { get; set; }
+		public IHostingEnvironment HostingEnvironment { get; set; }
 
 		public ILogger<BackgroundService> Logger { get; set; }
 
@@ -106,28 +106,15 @@ namespace TileCacheService.Web.Core
 
 							TilesTotal = tiles.TilesTotal;
 
-							if (TilesTotal > 10000)
+							if (TilesTotal > 30000)
 							{
 								await TileCacheRepository.SetTileCacheError(unfinishedTileCache.TileCacheId);
-								throw new ArgumentException($"Tile cache exceeding the maximum number of 10000 tiles: {TilesTotal}.");
+								throw new ArgumentException($"Tile cache exceeding the maximum number of 30000 tiles: {TilesTotal}.");
 							}
 
-							TileDownloader tileDownloader;
-
-							if (tileSource.AllowHiDefStitching)
-							{
-								tileDownloader = new MergedTileDownloader
-								{
-									TileServerUrls = tileSource.TileServerUrls.Select(x => x.Url).ToList(),
-								};
-							}
-							else
-							{
-								tileDownloader = new TileDownloader
-								{
-									TileServerUrls = tileSource.TileServerUrls.Select(x => x.Url).ToList(),
-								};
-							}
+							TileDownloader tileDownloader =
+								tileSource.AllowHiDefStitching ? new MergedTileDownloader() : new TileDownloader();
+							tileDownloader.TileServerUrls = tileSource.TileServerUrls.Select(x => x.Url).ToList();
 
 							await tileDownloader.Download(tiles, (zoomLevel, tileRow, tileColumn, tileData) =>
 							{
@@ -167,7 +154,7 @@ namespace TileCacheService.Web.Core
 						}
 					}
 
-					await Task.Delay(10 * 1000, stoppingToken);
+					await Task.Delay(5 * 1000, stoppingToken);
 				}
 				while (!stoppingToken.IsCancellationRequested);
 			}

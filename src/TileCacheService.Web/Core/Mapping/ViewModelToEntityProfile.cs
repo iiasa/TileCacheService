@@ -22,8 +22,9 @@ namespace TileCacheService.Web.Core.Mapping
 
 			CreateMap<TileSourceViewModel, TileSource>();
 			CreateMap<CreateTileSourceViewModel, TileSource>()
-				.ForMember(dest => dest.TileSourceId, opt => opt.Ignore())
-				.ForMember(dest => dest.TileServerUrls, opt => opt.MapFrom(src => src.TileServerUrls));
+				.ForMember(dest => dest.Bbox, opt => opt.MapFrom(src => GeometryHelper.HarmonizeBbox(src.Bbox)))
+				.ForMember(dest => dest.TileServerUrls, opt => opt.MapFrom(src => src.TileServerUrls))
+				.ForMember(dest => dest.TileSourceId, opt => opt.Ignore());
 
 			CreateMap<TileCacheViewModel, TileCache>()
 				.ForMember(dest => dest.TileSource, opt => opt.Ignore())

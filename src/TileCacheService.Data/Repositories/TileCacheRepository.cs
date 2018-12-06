@@ -33,8 +33,8 @@ namespace TileCacheService.Data.Repositories
 		public async Task<TileCache> GetFirstUnfinishedTileCache()
 		{
 			TileCache firstUnfinishedTileCache = await Context.TileCaches.FirstOrDefaultAsync(x =>
-				!x.ProcessingStarted.HasValue ||
-				(!x.ProcessingFinished.HasValue && (x.ProcessingStarted.Value - DateTime.Now) > TimeSpan.FromHours(1)));
+				!x.ProcessingStarted.HasValue || (!x.ProcessingFinished.HasValue &&
+					(DateTime.Now - x.ProcessingStarted.Value) > TimeSpan.FromMinutes(5)));
 
 			if (firstUnfinishedTileCache != null)
 			{
