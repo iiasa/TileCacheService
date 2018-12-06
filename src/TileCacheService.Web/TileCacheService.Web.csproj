@@ -5,13 +5,17 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <UserSecretsId>cf0338da-e5b7-4cc5-b32e-7d28165c6a6c</UserSecretsId>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>obj\Debug\netcoreapp2.1\TileCacheAPI.xml</DocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DocumentationFile>obj\Debug\netcoreapp2.1\TileCacheAPI.xml</DocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'!='Debug|AnyCPU'">
+		<DocumentationFile>/app/TileCacheAPI.xml</DocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
