@@ -157,6 +157,8 @@ namespace TileCacheService.Web.Core
 					await Task.Delay(5 * 1000, stoppingToken);
 				}
 				while (!stoppingToken.IsCancellationRequested);
+
+				Logger.LogInformation("Exiting OfflineCacheBackgroundTask.");
 			}
 		}
 

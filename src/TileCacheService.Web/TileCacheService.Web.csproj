@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <DockerTargetOS>Linux</DockerTargetOS>
-    <UserSecretsId>cf0338da-e5b7-4cc5-b32e-7d28165c6a6c</UserSecretsId>
-    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp2.2</TargetFramework>
+		<DockerTargetOS>Linux</DockerTargetOS>
+		<UserSecretsId>cf0338da-e5b7-4cc5-b32e-7d28165c6a6c</UserSecretsId>
+		<DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DocumentationFile>obj\Debug\netcoreapp2.1\TileCacheAPI.xml</DocumentationFile>
@@ -16,35 +16,35 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
+		<Folder Include="wwwroot\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.1.1" />
+	<ItemGroup>
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.1.1" />
 		<PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
-		<PackageReference Include="Serilog.Exceptions" Version="4.1.0" />
+		<PackageReference Include="Serilog.Exceptions" Version="5.0.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
 		<PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-beta" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.0.0-beta" />
-  </ItemGroup>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\TileCacheService.Data\TileCacheService.Data.csproj" />
-    <ProjectReference Include="..\TileCacheService.Processing\TileCacheService.Processing.csproj" />
-    <ProjectReference Include="..\TileCacheService.Shared\TileCacheService.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\TileCacheService.Data\TileCacheService.Data.csproj" />
+		<ProjectReference Include="..\TileCacheService.Processing\TileCacheService.Processing.csproj" />
+		<ProjectReference Include="..\TileCacheService.Shared\TileCacheService.Shared.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="Data\dummy.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TileCaches\dummy.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="Data\dummy.txt">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="TileCaches\dummy.txt">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>
